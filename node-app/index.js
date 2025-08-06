@@ -1,21 +1,22 @@
-
 const express = require('express');
 const app = express();
 const sql = require('mssql');
 const port = process.env.PORT || 3000;
-
+  
 const db_config = {
-    user: 'sqlserver',  
-    password:   'root',
-    server: '34.134.20.213' , 
-    database: 'NAGP',  
+    user: process.env.DB_USER,  
+    password: process.env.DB_PSWD,
+    server: process.env.DB_URI, 
+    database:process.env.DB_NAME,  
     options: {
         encrypt: false,  
         trustServerCertificate: false  
     },
-    port: 1433 
+    port: process.env.DB_PORT  
 };
  
+console.log('DB_Server =', process.env.DB_URI);
+
 // Middleware to parse JSON request bodies
 app.use(express.json());
  
@@ -23,7 +24,7 @@ app.get('/', (req, res) => {
   res.send('NAGP WebAPI is running...Use /api/data to fetch data from SQL DB!!');
 });
 
-app.get('/api/data', async (req, res) => {
+app.get('/api/data', async (req, res) => {         
         try {
             console.log("Opening db connection"); // The fetched data
             await sql.connect(db_config);
@@ -36,15 +37,7 @@ app.get('/api/data', async (req, res) => {
             await sql.close(); // Close the connection
         }
 }); 
-
-app.post('/api/data', async (req, res) => {
-
-        res.json({
-            message: 'User Data',
-            user:[{name: 'John Doe', age: 30},{name: 'Test', age: 30},{name: 'ev', age: 35}],
-            status: 'success'});
-}); 
-
+  
 // Start the server
 app.listen(port, () => {
   console.log(`Server listening`);

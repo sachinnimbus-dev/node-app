@@ -140,6 +140,27 @@ spec:
       containers:
       - image: gcr.io/nagpassignment-468019/node-app:latest
         imagePullPolicy: Always
+        env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-config-secret
+              key: user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-config-secret
+              key: password
+        - name: DB_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: db-config-secret
+              key: server
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: db-config-secret
+              key: database
         name: nginx-1
         resources:
           limits:
